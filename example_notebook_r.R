@@ -179,10 +179,13 @@ do_boxplot_score("action_count")
 
 class(tuts$score)
 
-
-
+# predict
+euts$score = predict(glm_model2, 
+                     newdata = euts)
 summary(glm_model2)
 
+
+euts_submit = euts %>% select(id, score)
 
 # train-test-split
 train_students = sample(selected_students, 0.7*length(selected_students))
@@ -233,4 +236,3 @@ plot(test_rf_roc)
 write_csv(euts_submit,
           file = './ushered_example_submission.csv')
 
-euts[['id', 'score']].to_csv('./working/example_submission.csv', index=False)
