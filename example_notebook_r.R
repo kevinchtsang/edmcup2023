@@ -216,7 +216,7 @@ train.control <- trainControl(method          = "cv",
 
 model_rf <- train(
   as.factor(make.names(score)) ~ .,
-  data      = tuts_train, 
+  data      = tuts_train %>% select(c(score,all_of(input_cols3))), 
   method    = "rf",
   trControl = train.control,
   metric    = "ROC")
@@ -225,12 +225,13 @@ model_rf <- train(
 
 
 tuts_test_score = predict(model_rf, 
-                     newdata = tuts_test)
+                     newdata = tuts_test,
+                     "prob")[,2]
 test_rf_roc = roc.curve(tuts_test_score[tuts_test$score == 1], 
                         tuts_test_score[tuts_test$score == 0], 
                         curve = TRUE)
 plot(test_rf_roc)
-
+test_rf_roc$auc
 
 
 write_csv(euts_submit,
