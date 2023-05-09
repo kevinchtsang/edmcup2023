@@ -4,6 +4,8 @@ library(tidyverse)
 library(caret)
 library(skimr)
 library(PRROC)
+library(stringr)
+library(tidyr)
 
 # normalise function
 
@@ -21,6 +23,36 @@ ar = read_csv('./data/assignment_relationships.csv')
 al = read_csv('./data/action_logs.csv')
 ass_details = read_csv('./data/assignment_details.csv')
 prob_details = read_csv('./data/problem_details.csv')
+
+# create new variables for prob_details - 1 for prob_skill_code,
+#1 for length of problem skill description
+
+#1
+prob_details <- prob_details %>%
+  separate_wider_delim(problem_skill_code, ".", names = c("problem_grade", "problem_cat", "problem_sub_cat", "problem_#"))
+
+prob_details$problem_grade <- as.factor(prob_details$problem_grade)
+
+levels(prob_details$problem_grade)
+
+#2
+
+prob_details$longest_word <- sapply(strsplit(prob_details$problem_skill_description, " "), function(x) x[which.max(nchar(x))])
+
+# str_replace_all(prob_details$longest_word, "[/()]", " ")
+
+
+prob_details <- prob_details %>%
+  group_by(problem_id) %>%
+  mutate(
+    length_longest = nchar(longest_word)
+  )
+
+##checking variables
+
+skim(prob_details$length_longest) # range 3-33, hmm...
+
+
 
 # set.seed(123)
 # selected_students = sample(unique(ass_details$student_id), 100)
