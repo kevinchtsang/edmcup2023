@@ -84,4 +84,5 @@ euts_submit = euts %>% select(id, score)
 write_csv(euts_submit,
           file = './ushered_example_submission.csv')
 
-euts[['id', 'score']].to_csv('./working/example_submission.csv', index=False)
+# Python code
+# euts[['id', 'score']].to_csv('./working/example_submission.csv', index=False)
