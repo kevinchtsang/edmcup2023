@@ -9,6 +9,24 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+library(tidyverse)
+library(patchwork)
+library(kableExtra)
+library(psych)
+library(sjPlot)
+library(ggridges)
+library(ggthemes)
+library(styler)
+library(skimr)
 
+```
+
+```{r, reading in data}
+
+test <- read_csv("C:/Users/ljoll/OneDrive/Documents/GitHub/edmcup2023/data/assignment_details.csv")
+
+AL <- read_csv("C:/Users/ljoll/OneDrive/Documents/GitHub/edmcup2023/data/assignment_details.csv")
+
+skim(test)
 ```
 
