@@ -20,6 +20,7 @@ euts = read_csv('./data/evaluation_unit_test_scores.csv')
 ar = read_csv('./data/assignment_relationships.csv')
 al = read_csv('./data/action_logs.csv')
 ass_details = read_csv('./data/assignment_details.csv')
+prob_details = read_csv('./data/problem_details.csv')
 
 # set.seed(123)
 # selected_students = sample(unique(ass_details$student_id), 100)
@@ -125,7 +126,12 @@ df_norm = df %>%
 tuts = tuts %>%
   left_join(df_norm, by = c('assignment_log_id' = 'unit_test_assignment_log_id')) %>%
   left_join(ass_details[,c('assignment_log_id','student_id')], by = c('assignment_log_id')) %>%
-  left_join(df_student_selected_features, by = c('student_id'))
+  left_join(df_student_selected_features, by = c('student_id')) %>%
+  left_join(prob_details[c('problem_id', 'problem_type')], by = c("problem_id"))
+
+tuts$problem_type = tuts$problem_type %>%
+  replace_na("unknown")
+  
 
 # Merge action count features with the evaluation unit test scores
 # euts = euts.merge(df, how='left', left_on='assignment_log_id', right_index=True)
@@ -203,7 +209,6 @@ input_cols3 = colnames(tuts %>%
                                    'problem_id',
                                    'score',
                                    'student_id')))
-input_cols3 = 'action_count'
 
 glm_model3 = glm(formula = paste0(target_col,'~',paste0(input_cols3, collapse = "+")), data = tuts_train)
 
